@@ -1,0 +1,29 @@
+---
+- name: Apache web server installed
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+  - name: latest Apache version installed
+    yum:
+      name: httpd
+      state: latest
+
+  - name: Apache enabled and running
+    service:
+      name: httpd
+      enabled: true
+      state: started
+
+  - name: copy index.html
+    copy:
+      src: index.html
+      dest: /var/www/html/
+
+  - name: open up https
+    firewalld:
+      zone: public
+      service: https
+      permanent: true
+      imediate: true
+      state: enabled
